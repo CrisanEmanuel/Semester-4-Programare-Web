@@ -1,0 +1,33 @@
+*{
+    padding: 3px;
+}
+
+div {
+    display: flex;
+    width: 560px;
+    border: 1px solid black;
+}
+
+p{
+    position: absolute;
+    margin: 0 50px;
+}
+
+img{
+    border: 25px solid #00ffff;
+    height: 230px;
+    width: 230px;
+}
+
+li{
+    float: left;
+    display: flex;
+    margin: 10px;
+    align-items: flex-end;
+}
+
+#poza1,#poza2,#poza3,#poza4{
+    display: flex;
+    width: 200px;
+    padding: 0;
+}
