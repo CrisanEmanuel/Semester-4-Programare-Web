@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Problema 1</title>
+        <meta charset="utf-8" />
+        <script>
+            function move(item, select, index)
+            {
+                let doi, unu, option;
+                if (select === 1)
+                {
+                    doi = document.getElementById("doi");
+                    unu = document.getElementById("unu");
+                    option = document.createElement("option");
+                    option.text = item;
+                    doi.add(option);
+                    unu.remove(index);
+                }
+                else if (select === 2)
+                {
+                    doi = document.getElementById("doi");
+                    unu = document.getElementById("unu");
+                    option = document.createElement("option");
+                    option.text = item;
+                    unu.add(option);
+                    doi.remove(index);
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <h2>Lista1</h2>
+        <ul>
+            <label for="unu"></label>
+            <select id="unu" multiple="multiple" ondblclick="move(this.options[this.selectedIndex].text, 1, this.selectedIndex);">
+                <option value="Optiune1"> Optiunea 1 </option>
+                <option value="Optiune2"> Optiunea 2 </option>
+                <option value="Optiune3"> Optiunea 3 </option>
+                <option value="Optiune4"> Optiunea 4 </option>
+            </select>
+        </ul>
+
+        <h2>Lista2</h2>
+        <ul>
+            <label for="doi"></label>
+            <select id="doi" multiple="multiple" ondblclick="move(this.options[this.selectedIndex].text, 2, this.selectedIndex);">
+                <option value="Optiune5"> Optiunea 5 </option>
+                <option value="Optiune6"> Optiunea 6 </option>
+                <option value="Optiune7"> Optiunea 7 </option>
+                <option value="Optiune8"> Optiunea 8 </option>
+            </select>
+        </ul>
+    </body>
+</html>

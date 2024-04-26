@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        div#board {
+            background:#5a5a97;
+            border:#999 1px solid;
+            width:450px;
+            height:450px;
+            padding:24px; /* spatiu intre marginile div-ului si continut */
+            margin: 130px 500px;
+        }
+        div#board > div { /* div-ul copil al div-ului cu id-ul board */
+            border:white 1px solid;
+            width:50px;
+            height:50px;
+            float:left; /* pozitioneaza div-urile copil pe orizontala unu langa altul */
+            margin:10px; /* spatiu intre div-urile copil */
+            padding:20px;
+            font-size:64px;
+            cursor:pointer;
+            text-align:center;
+        }
+    </style>
+    <script>
+        let values = [];
+        let tile_ids = [];
+        let flipped = 0;
+        let variable = ['A','A','B','B','C','C','D','D','E','E','F','F','G','G','H','H'];
+
+        Array.prototype.shuffle = function() { /* fisher-yates shuffle */
+            let i = this.length - 1, j, temp;
+            while(i > 0) {
+                j = Math.floor(Math.random() * (i+1));
+                temp = this[j];
+                this[j] = this[i];
+                this[i] = temp;
+                i--;
+            }
+        }
+
+        function FlipTile(tile, val) {
+            if(tile.innerHTML === "" && values.length < 2) {
+                tile.style.background = '#FFF';
+                tile.innerHTML = val;
+                if(values.length === 0){
+                    values.push(val);
+                    tile_ids.push(tile.id);
+                } else if(values.length === 1){
+                    values.push(val);
+                    tile_ids.push(tile.id);
+                    if(values[0] === values[1]){
+                        flipped += 2;
+                        values = [];
+                        tile_ids = [];
+                        if(flipped === variable.length){
+                            alert("Game over!");
+                            document.getElementById('board').innerHTML = "";
+                            start();
+                        }
+                    } else {
+                        function reIntoarcere(){
+                            let tile_1 = document.getElementById(tile_ids[0]);
+                            let tile_2 = document.getElementById(tile_ids[1]);
+                            tile_1.style.background = 'none';
+                            tile_1.innerHTML = "";
+                            tile_2.style.background = 'none';
+                            tile_2.innerHTML = "";
+                            values = [];
+                            tile_ids = [];
+                        }
+                        setTimeout(reIntoarcere, 700);
+                    }
+                }
+            }
+        }
+
+        function start(){
+            flipped = 0;
+            let output = '';
+            variable.shuffle();
+            for(let i = 0; i < variable.length; i++)
+            {
+                output += '<div id="tile_' + i + '" onclick="FlipTile(this, \'' + variable[i] + '\')"></div>';
+            }
+            document.getElementById('board').innerHTML = output;
+        }
+    </script>
+    <title>Problema 3</title>
+</head>
+<body>
+    <div id="board"></div>
+    <script> start(); </script>
+</body>
+</html>

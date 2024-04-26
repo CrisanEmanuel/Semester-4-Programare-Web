@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Problema 6</title>
+    <style>
+        body {
+            background-color: #5a5a97;
+        }
+        table {
+            border-collapse: collapse;
+            width: 180px;
+            margin-top: 190px;
+            margin-left: 645px;
+        }
+        table, td {
+            text-align: center;
+        }
+        td{
+            height: 50px;
+            min-width: 50px;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            border-right: none;
+            border-left: none;
+        }
+    </style>
+</head>
+<body onload="generateTable()">
+    <table id="myTable"></table>
+</body>
+<script>
+    let empty, dim = 4;
+
+    function generateTable() {
+        let elem;
+        let numbers = generateNumbers(dim * dim);
+        let output = "";
+        for (let i = 0; i < dim; i++) {
+            output += '<tr>'
+            for(let j = 0; j < dim; j++) {
+                output += `<td id='${i * dim + j}'>`;
+                elem = numbers.pop();
+                if (elem !== dim * dim)
+                    output += elem;
+                else {
+                    empty = i * dim + j;
+                }
+                output += '</td>';
+            }
+            output += '</tr>'
+        }
+        document.getElementById("myTable").innerHTML= output ;
+    }
+
+    function swap(id1, id2){
+        let aux = document.getElementById(id1).innerHTML;
+        document.getElementById(id1).innerHTML = document.getElementById(id2).innerHTML;
+        document.getElementById(id2).innerHTML = aux;
+        empty = id2;
+    }
+
+    document.onkeydown = checkKey;
+    function checkKey(e) {
+        if (e.keyCode === 38) { /*up*/
+            if (empty - dim >= 0)
+                swap(empty, empty - dim);
+        }
+        else if (e.keyCode === 40) { /*down*/
+            if (empty + dim <= dim * dim)
+                swap(empty, empty + dim);
+        }
+        else if (e.keyCode === 37) { /*left*/
+            if (empty % dim !== 0)
+                swap(empty, empty - 1);
+        }
+        else if (e.keyCode === 39) { /*right*/
+            if (empty % dim !== dim - 1)
+                swap(empty, empty + 1);
+        }
+    }
+    function shuffle(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function generateNumbers(n) {
+        let array = [];
+        for(let i = 1; i <= n; i++){
+            array.push(i);
+        }
+        shuffle(array);
+        return array;
+    }
+</script>
+</html>
