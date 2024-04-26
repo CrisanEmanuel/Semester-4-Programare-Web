@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Problema 2</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>
+        function isANumber(str) {
+            return !/\D/.test(str);
+        }
+
+        function validateForm() {
+            let errorMessageDiv = $(".mesaj");
+            errorMessageDiv.empty();
+
+            let paragraph = $("<p></p>"); // create a new paragraph
+            paragraph.css("color", "red");
+
+            let out = "";
+
+            function getInput(name) {
+                return $("input[name=" + name + "]");
+            }
+
+            let nume = getInput("nume").val();
+            let data = getInput("data").val();
+            let varsta = getInput("varsta").val();
+            let email = getInput("email").val();
+
+
+            if (nume === "" || data === "" || varsta === "" || email === "") {
+                let err = [];
+
+                if (nume === "") {
+                    err.push("Nume");
+                    getInput("nume").css("border", "2px solid red");
+                } else {
+                    getInput("nume").css("border", "1px solid grey");
+                }
+
+                if (data === "") {
+                    err.push("Data");
+                    getInput("data").css("border", "2px solid red");
+                } else {
+                    getInput("data").css("border", "1px solid grey");
+                }
+
+                if (varsta === "" || !isANumber(varsta)) {
+                    err.push("Varsta");
+                    getInput("varsta").css("border", "2px solid red");
+                } else {
+                    getInput("varsta").css("border", "1px solid grey");
+                }
+
+                if (email === "" || !/^.{1,20}@.{1,10}\..{1,5}$/.test(email)) {
+                    err.push("Email");
+                    getInput("email").css("border", "2px solid red");
+                } else {
+                    getInput("email").css("border", "1px solid grey");
+                }
+
+                if (err.length === 1) {
+                    out += 'Campul';
+                } else {
+                    out += 'Campurile';
+                }
+
+                let first = 1;
+                err.forEach(function(element) {
+                    if (first !== 1)
+                        out += ', ' + element;
+                    else
+                        out += ' ' + element;
+                    first = 0;
+                });
+
+                if (err.length > 1) {
+                    paragraph.text(out + " sunt goale.");
+                } else {
+                    paragraph.text(out + " este gol.");
+                }
+
+                errorMessageDiv.append(paragraph);
+                return false;
+
+            } else {
+                getInput("nume").css("border", "2px solid green");
+                getInput("data").css("border", "2px solid green");
+                getInput("varsta").css("border", "2px solid green");
+                getInput("email").css("border", "2px solid green");
+                paragraph.css("color", "green");
+                paragraph.text("Datele au fost introduse corect!");
+                errorMessageDiv.append(paragraph);
+                setTimeout(function() {location.reload();}, 3000);
+                return false;
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="content">
+        <form class="test" name="myForm" onsubmit="return validateForm()" method="post">
+            <label>
+                <input type="text" name="nume" placeholder="Nume">
+            </label> <br>
+            <label>
+                <input type="date" name="data">
+            </label> <br>
+            <label>
+                <input type="number" name="varsta" placeholder="Varsta" min="0">
+            </label> <br>
+            <label>
+                <input type="email" name="email" placeholder="Email">
+            </label><br>
+                <input type="submit" value="Submit">
+        </form>
+    </div>
+    <div class="mesaj"></div>
+</body>
+</html>

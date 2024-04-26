@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Problema 4</title>
+    <meta charset="utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <style>
+        body {
+            font-size: 16px;
+            font-family: Verdana, sans-serif;
+            background-color: #fffbe7;
+        }
+
+        table {
+            width: 540px;
+            margin: 20px auto;
+            border-spacing: 0;
+            border-collapse: collapse;
+            border: 1px solid #757575 ;
+        }
+
+        th {
+            width: 180px;
+            padding: 8px 20px;
+            background-color: #f6a376;
+            font-weight: bold;
+            cursor: pointer;
+            border-bottom: 1px solid #757575;
+            border-top: 1px solid #757575;
+        }
+        td {
+            width: 180px;
+            padding: 8px 20px;
+            border-top: 1px solid #757575;
+            border-bottom: 1px solid #757575;
+        }
+
+        #vertically tr:nth-child(odd) {
+            background-color: #ffcaab;
+        }
+
+        #vertically tr:nth-child(even) {
+            background-color: #ffe0c7;
+        }
+
+        #horizontally td:nth-child(2n) {
+            background-color: #ffcaab;
+        }
+
+        #horizontally td:nth-child(2n+1) {
+            background-color: #ffe0c7;
+        }
+        .integer {
+            text-align: right;
+        }
+
+    </style>
+    <script>
+    $(function() {
+        let sortOrderV = 1;
+
+        $("#vertically th").on("click", function() {
+            const rows = sortRows(this);
+            rebuildTbody(rows);
+            sortOrderV *= -1;
+
+            function sortRows(th) {
+                const rows = $.makeArray($('#vertically tbody > tr'));
+                const col = th.cellIndex;
+                const type = th.dataset.type;
+                rows.sort(function(a, b) {
+                    return compareV(a, b, col, type) * sortOrderV;
+                });
+                return rows;
+            }
+
+            function compareV(a, b, col, type) {
+                let _a = a.children[col].textContent;
+                let _b = b.children[col].textContent;
+                if (type === "number") {
+                    _a *= 1;
+                    _b *= 1;
+                } else if (type === "string") {
+                    _a = _a.toLowerCase();
+                    _b = _b.toLowerCase();
+                }
+
+                if (_a < _b) {
+                    return -1;
+                }
+                if (_a > _b) {
+                    return 1;
+                }
+                return 0;
+            }
+
+            function rebuildTbody(rows) {
+                const tbody = $("#vertically tbody");
+                while (tbody.firstChild) {
+                    tbody.remove(tbody.firstChild);
+                }
+
+                let j;
+                for (j = 0; j < rows.length; j++) {
+                    tbody.append(rows[j]);
+                }
+            }
+        });
+
+        $("#horizontally tbody th").on("click", function() {
+            let row = $(this).parent();
+            let selectedIndex = row.index();
+            let type = $(this).data("type");
+
+            if ($(this).data("sort") === undefined) {
+                $(this).data("sort", true);
+            }
+
+            sortRow(row, $(this).data("sort"));
+            $(this).data("sort", !$(this).data("sort"));
+
+            function sortRow(row, desc) {
+                let table = getTblCont(row.parent());
+                if (desc === undefined || desc === true) {
+                    table.sort(function(a,b) {
+                        return sortMatrixDesc(a, b, type);
+                    });
+                } else {
+                    table.sort(function(a,b) {
+                        return sortMatrixAsc(a, b, type);
+                    });
+                }
+                row.parent().find("tr").each(function(currentRowIndex, tr) {
+                    $("td", tr).each(function(i, td) {
+                        $(td).html(table[i][currentRowIndex]);
+                    });
+                });
+            }
+
+            function getTblCont(table) {
+                let cols = [];
+                $("tr:first td", table).each(function(i, el) {
+                    cols[i] = [];
+                });
+                for (let c = 0; c < cols.length; c++) {
+                    $("tr", table).each(function(i, el) {
+                        cols[c].push($("td", el).eq(c).text().trim());
+                    });
+                }
+                return cols;
+            }
+
+            function sortMatrixDesc(a, b, type) {
+                let _a = a[selectedIndex];
+                let _b = b[selectedIndex];
+                if (type === "number") {
+                    _a *= 1;
+                    _b *= 1;
+                }
+                else if (type === "string") {
+                    _a = _a.toLowerCase();
+                    _b = _b.toLowerCase();
+                }
+                if (_a === _b) {
+                    return 0;
+                } else {
+                    return (_a < _b) ? -1 : 1;
+                }
+            }
+
+            function sortMatrixAsc(a, b, type) {
+                let _a = a[selectedIndex];
+                let _b = b[selectedIndex];
+                if (type === "number") {
+                    _a *= 1;
+                    _b *= 1;
+                }
+                else if (type === "string") {
+                    _a = _a.toLowerCase();
+                    _b = _b.toLowerCase();
+                }
+                if (_a === _b) {
+                    return 0;
+                } else {
+                    return (_a > _b) ? -1 : 1;
+                }
+            }
+        });
+    });
+    </script>
+</head>
+
+<body>
+<table id="vertically">
+    <thead>
+    <tr>
+        <th data-type="string">Fructe</th>
+        <th data-type="number">Cantitate</th>
+        <th data-type="number">Pret</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Mere</td>
+        <td class="integer">34</td>
+        <td class="integer">43</td>
+    </tr>
+    <tr>
+        <td>Pere</td>
+        <td class="integer">101</td>
+        <td class="integer">4</td>
+    </tr>
+    <tr>
+        <td>Avocado</td>
+        <td class="integer">24</td>
+        <td class="integer">45</td>
+    </tr>
+    <tr>
+        <td>Kiwi</td>
+        <td class="integer">23</td>
+        <td class="integer">12</td>
+    </tr>
+    <tr>
+        <td>Portocale</td>
+        <td class="integer">45</td>
+        <td class="integer">11</td>
+    </tr>
+    <tr>
+        <td>Cirese</td>
+        <td class="integer">68</td>
+        <td class="integer">150</td>
+    </tr>
+    </tbody>
+</table>
+
+<table id="horizontally">
+    <tbody id="id2">
+    <tr id="id1">
+        <th id= "id3" data-type="string">Fructe</th>
+        <td>Mere</td>
+        <td>Pere</td>
+        <td>Avocado</td>
+        <td>Kiwi</td>
+        <td>Portocale</td>
+        <td>Cirese</td>
+    </tr>
+    <tr>
+        <th data-type="number">Cantitate</th>
+        <td class="integer">34</td>
+        <td class="integer">101</td>
+        <td class="integer">24</td>
+        <td class="integer">23</td>
+        <td class="integer">45</td>
+        <td class="integer">68</td>
+    </tr>
+    <tr>
+        <th data-type="number">Pret</th>
+        <td class="integer">43</td>
+        <td class="integer">4</td>
+        <td class="integer">45</td>
+        <td class="integer">12</td>
+        <td class="integer">11</td>
+        <td class="integer">150</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

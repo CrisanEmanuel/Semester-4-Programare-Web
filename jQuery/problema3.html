@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<!--suppress JSJQueryEfficiency -->
+<html lang="en">
+<head>
+    <style>
+        div#board {
+            background:#5a5a97;
+            border:#999 1px solid;
+            width:450px;
+            height:450px;
+            padding:24px; /* spatiu intre marginile div-ului si continut */
+            margin: 130px 500px;
+        }
+        div#board > div { /* div-ul copil al div-ului cu id-ul board */
+            border:white 1px solid;
+            width:50px;
+            height:50px;
+            float:left; /* pozitioneaza div-urile copil pe orizontala unu langa altul */
+            margin:10px; /* spatiu intre div-urile copil */
+            padding:20px;
+            font-size:64px;
+            cursor:pointer;
+            text-align:center;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            let values = [];
+            let tile_ids = [];
+            let flipped = 0;
+            let variables = ['A','A','B','B','C','C','D','D','E','E','F','F','G','G','H','H'];
+            let ids = '';
+
+            Array.prototype.tile_shuffle = function(){
+                let i = this.length, j, temp;
+                while(--i > 0){
+                    j = Math.floor(Math.random() * (i+1));
+                    temp = this[j];
+                    this[j] = this[i];
+                    this[i] = temp;
+                }
+            }
+
+            newPatrat();
+
+            function newPatrat() {
+                flipped = 0;
+                let output = '';
+                variables.tile_shuffle();
+                for(let i = 0; i < variables.length; i++)
+                {
+                    output += `<div id="tile_${i}"></div>`;
+                    if(i !== variables.length - 1){
+                        ids +=`#tile_${i}, `;
+                    }
+                    else {
+                        ids += `#tile_${i}`;
+                    }
+                }
+                $('#board').append(output);
+            }
+
+            $('#board').children('div').click(function() {
+                let idTile = $(this).attr('id');
+                let tile = $(this);
+
+                let nr = idTile.split('_')[1];
+                let val = variables[nr];
+
+                if(tile.text() === "" && values.length < 2){
+                    tile.css("background-color", '#FFF').text(variables[nr])
+                    if(values.length === 0){
+                        values.push(val);
+                        tile_ids.push(idTile);
+                    } else
+                    if(values.length === 1){
+                        values.push(val);
+                        tile_ids.push(idTile);
+                        if(values[0] === values[1]){
+                            flipped += 2;
+                            values = [];
+                            tile_ids = [];
+                            if(flipped === variables.length){
+                                alert("Game over!");
+                                $('#board').text("");
+                            }
+                        } else {
+                            function reIntoarcere(){
+                                let tile_1 = $(`#${tile_ids[0]}`);
+                                let tile_2 = $(`#${tile_ids[1]}`);
+                                tile_1.css("background-color", '#5a5a97').text("");
+                                tile_2.css("background-color", '#5a5a97').text("");
+                                values = [];
+                                tile_ids = [];
+                            }
+                            setTimeout(reIntoarcere, 500);
+                        }
+                    }
+                }
+            });
+
+        });
+    </script>
+    <title>Problema 3</title>
+</head>
+<body>
+    <div id="board"></div>
+</body>
+</html>
